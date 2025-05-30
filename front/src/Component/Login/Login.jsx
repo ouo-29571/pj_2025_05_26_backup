@@ -20,11 +20,9 @@ const Login = () => {
     //로그인버튼 클릭 시 수행
     //비밀번호 해시화?
     const handleLogin_Submit = async (e) => {
-        //새로고침 삭제할 예정
-        e.preventDefault();
-
         //입력이 없을경우
         if (!login_form.login_email || !login_form.login_password) {
+            e.preventDefault();
             setLogin_error("이메일 또는 비밀번호를 입력하세요.");
         } else {
             //에러문구 삭제후 DB 값 전달
@@ -43,7 +41,9 @@ const Login = () => {
                 //로그인 성공
                 console.log("로그인 성공: ", data);
             } else {
+                //새로고침 삭제할 예정
                 setLogin_error("이메일 또는 비밀번호가 일치하지 않습니다.");
+                e.preventDefault();
             }
         }
     };
@@ -100,10 +100,6 @@ const Login = () => {
                         </div>
                         <div>
                             <Link to="/Passwordfind">비밀번호찾기</Link>
-                        </div>
-                        {/* 삭제용 */}
-                        <div>
-                            <Link to="/Mypage">마이페이지</Link>
                         </div>
                     </div>
                 </div>

@@ -86,10 +86,9 @@ app.post("/login_submit", async (req, res) => {
     const { login_email, login_password } = req.body;
     const rows = await login_data(login_email, login_password);
 
+    login_check = false;
     if (rows[0].count > 0) {
         login_check = true;
-    } else {
-        login_check = false;
     }
 
     res.json({ login_check });
