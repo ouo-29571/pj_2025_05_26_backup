@@ -19,6 +19,11 @@ const Signup = () => {
         Signup_tel: "",
     });
 
+    //input태그 휠로 값 변경방지
+    const handlewheel_input = (e) => {
+        e.target.blur();
+    };
+
     //이메일 중복확인
     const handleBlurOrEnter_email = async (e) => {
         const email_value = e.target.value;
@@ -67,7 +72,7 @@ const Signup = () => {
         }
     };
 
-    //DB에 전달한 form에 값 저장
+    //DB에 전달할 form에 값 저장
     function handleChange(e) {
         const { id, value } = e.target;
         setSignup_form((prev) => ({ ...prev, [id]: value }));
@@ -84,7 +89,7 @@ const Signup = () => {
             e.preventDefault();
         } else {
             //DB에 화원가입정보 보내기
-            const response = await fetch("http://localhost:8080/signup", {
+            const response = await fetch("http://localhost:8080/users/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -224,6 +229,8 @@ const Signup = () => {
                                         onChange={(e) => {
                                             handleChange(e);
                                         }}
+                                        //마우스 휠 이벤트
+                                        onWheel={handlewheel_input}
                                     />
                                 </div>
                             </div>

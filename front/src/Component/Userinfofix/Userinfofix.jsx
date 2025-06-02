@@ -27,9 +27,29 @@ const Userinfofix = () => {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({})
-        })
-    })
+            body: JSON.stringify(Userinfofix_data),
+        });
+        const data = await response.json();
+        if (data.userinfo != null) {
+            setUserinfofix_form((prev) => ({ ...prev, [id]: value }));
+        }
+    }
+
+    useEffect(() => {
+        //localStorage에 저장된 user 정보 가져오기
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (!user || !user.token) {
+            navigate("/Login");
+        } else {
+            //DB에 저장된 회원정보 가져오기
+            Set_Userinfofix_form(Userinfofix_data);
+        }
+    }, [navigate]);
+
+    const handlewheel_input = (e) => {
+        e.target.blur();
+    };
 
     //이메일 중복확인
     const handleBlurOrEnter_email = async (e) => {
@@ -119,7 +139,7 @@ const Userinfofix = () => {
         }
     };
 
-    //회원정보 수정 취소버튼
+    //회원정보 취소버튼
     const handle_userinfofixback = () => {
         navigate("/Mypage");
     };
@@ -255,7 +275,7 @@ const Userinfofix = () => {
                                 </div>
                                 <div>
                                     <input
-                                        className="Userinfofix_tel_input"
+                                        className="Signup_tel_input"
                                         type="number"
                                         id="Userinfofix_tel"
                                         value={Userinfofix_form.Userinfofix_tel}
@@ -264,6 +284,8 @@ const Userinfofix = () => {
                                         onChange={(e) => {
                                             handleChange(e);
                                         }}
+                                        //마우스 휠 이벤트
+                                        onWheel={handlewheel_input}
                                     />
                                 </div>
                             </div>
