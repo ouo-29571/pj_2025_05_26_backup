@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./Login.css";
 
 const Login = () => {
+    const navigate = useNavigate();
+
     const [login_form, setLogin_form] = useState({
         login_email: "",
         login_password: "",
@@ -18,11 +20,11 @@ const Login = () => {
     };
 
     //로그인버튼 클릭 시 수행
-    //비밀번호 해시화?
     const handleLogin_Submit = async (e) => {
+        e.preventDefault();
+
         //입력이 없을경우
         if (!login_form.login_email || !login_form.login_password) {
-            e.preventDefault();
             setLogin_error("이메일 또는 비밀번호를 입력하세요.");
         } else {
             //에러문구 삭제후 DB 값 전달
@@ -37,13 +39,13 @@ const Login = () => {
 
             //받은 값 활용
             const data = await response.json();
-            if (data.login_check === true) {
+            if (data.login_check && response.ok) {
                 //로그인 성공
                 console.log("로그인 성공: ", data);
+                //로그인 성공시 메인페이지로 이동
+                navigate("/Main");
             } else {
-                //새로고침 삭제할 예정
                 setLogin_error("이메일 또는 비밀번호가 일치하지 않습니다.");
-                e.preventDefault();
             }
         }
     };
