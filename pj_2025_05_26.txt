@@ -51,6 +51,10 @@ DB접근
 figma 공유링크
 https://www.figma.com/design/G9D4Vzpyt1JLN4PwJ5sYfu/%EC%A0%9C%EB%AA%A9-%EC%97%86%EC%9D%8C?node-id=0-1&t=i7fqRoTYkozT6yIM-1
 
+erd cloud
+https://www.erdcloud.com/d/uh76RFdmgfnNEWfr7
+
+
 깃허브 사용법
 https://devyihyun.tistory.com/28
 

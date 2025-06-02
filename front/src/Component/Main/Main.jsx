@@ -1,7 +1,14 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Main = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("user");
+        navigate("/");
+    };
+
     return (
         <>
             {/* 확인용 */}
@@ -13,7 +20,11 @@ const Main = () => {
                     <Link to="/signup">회원가입</Link>
                 </div>
                 <div>
-                    <Link to="마이페이지">마이페이지</Link>
+                    <Link to="/Mypage">마이페이지</Link>
+                </div>
+                {/* 임시로그아웃 버튼 */}
+                <div>
+                    <button onClick={handleLogout}>로그아웃</button>
                 </div>
             </div>
         </>

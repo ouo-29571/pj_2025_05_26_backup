@@ -12,7 +12,7 @@ const Login = () => {
     });
     const [login_error, setLogin_error] = useState("");
 
-    //form 값 업데이트
+    //login_form 값 업데이트
     const handleChange_Login = (e) => {
         const { id, value } = e.target;
         setLogin_form((prev) => ({ ...prev, [id]: value }));
@@ -40,10 +40,14 @@ const Login = () => {
             //받은 값 활용
             const data = await response.json();
             if (data.login_check && response.ok) {
-                //로그인 성공
-                console.log("로그인 성공: ", data);
-                //로그인 성공시 메인페이지로 이동
-                navigate("/Main");
+                //로그인 성공시 실행
+                const userData = {
+                    name: login_form.login_email,
+                    token: login_form.login_password,
+                };
+                localStorage.setItem("user", JSON.stringify(userData));
+
+                navigate("/");
             } else {
                 setLogin_error("이메일 또는 비밀번호가 일치하지 않습니다.");
             }
