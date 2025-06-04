@@ -42,7 +42,7 @@ const mypage = () => {
 
     //마이페이지 클릭시 로그인상태가 아닐경우 로그인 페이지로
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
+        const user = JSON.parse(sessionStorage.getItem("user"));
 
         if (!user || !user.token) {
             navigate("/Login");

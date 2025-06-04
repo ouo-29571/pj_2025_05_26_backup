@@ -45,7 +45,7 @@ const Login = () => {
                     name: login_form.login_email,
                     token: login_form.login_password,
                 };
-                localStorage.setItem("user", JSON.stringify(userData));
+                sessionStorage.setItem("user", JSON.stringify(userData));
 
                 navigate("/");
             } else {

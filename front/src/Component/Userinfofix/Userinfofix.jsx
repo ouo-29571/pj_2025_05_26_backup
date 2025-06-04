@@ -41,8 +41,8 @@ const Userinfofix = () => {
     }
 
     useEffect(() => {
-        //localStorage에 저장된 user 정보 가져오기
-        const user = JSON.parse(localStorage.getItem("user"));
+        //sessionStorage에 저장된 user 정보 가져오기
+        const user = JSON.parse(sessionStorage.getItem("user"));
 
         if (!user || !user.token) {
             navigate("/Login");
@@ -131,7 +131,7 @@ const Userinfofix = () => {
             alert("중복된 이메일입니다.");
             //새로고침 방지용
         } else {
-            const user = JSON.parse(localStorage.getItem("user"));
+            const user = JSON.parse(sessionStorage.getItem("user"));
             const user_name = user.name;
             const user_info_data = { ...Userinfofix_form, user_name };
             //DB에 화원가입정보 보내기
@@ -148,7 +148,7 @@ const Userinfofix = () => {
 
             const data = await response.json();
             if (data.updata_signup_check) {
-                localStorage.removeItem("user");
+                sessionStorage.removeItem("user");
                 navigate("/Login");
             }
         }
