@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "./Signup.css";
 
 const Signup = () => {
+    const navigate = useNavigate();
+
     const [confirmPassword, setConfirmPassword] = useState("");
     //에러문구
     const [Signup_error, setSignup_error] = useState({
@@ -78,27 +80,27 @@ const Signup = () => {
         setSignup_form((prev) => ({ ...prev, [id]: value }));
     }
 
+    //DB저장
     const handleSignup_Submit = async (e) => {
+        e.preventDefault();
         //에러에 문구가 있으닌 true
         if (Signup_error.Signup_error_password) {
             alert("비밀번호가 일치하지 않습니다.");
-            e.preventDefault();
         } else if (Signup_error.Signup_error_email) {
             alert("중복된 이메일입니다.");
-            //새로고침 방지용
-            e.preventDefault();
         } else {
             //DB에 화원가입정보 보내기
-            const response = await fetch("http://localhost:8080/users/signup", {
+            const response = await fetch("http://localhost:8080/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(Signup_form),
             });
-            //fetch의 반환값(response.ok / response.json()) = 상태값 200-299이면 true / false(웹 개발자모드에서 http상태코드 오류)
-            if (response.ok) {
-                //회원가입 성공
+
+            const data = await response.json();
+            if (data.signup_check) {
+                navigate("/Login");
             }
         }
     };

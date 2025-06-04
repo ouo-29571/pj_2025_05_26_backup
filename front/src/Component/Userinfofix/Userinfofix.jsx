@@ -21,17 +21,22 @@ const Userinfofix = () => {
         Userinfofix_tel: "",
     });
 
-    useEffect( async() => {
+    async function Set_Userinfofix_form(get_email) {
         const response = await fetch("http://localhost:8080/get_userinfo", {
-            method: 'POST',
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify(Userinfofix_data),
+            body: JSON.stringify({ get_email }),
         });
         const data = await response.json();
-        if (data.userinfo != null) {
-            setUserinfofix_form((prev) => ({ ...prev, [id]: value }));
+        if (data) {
+            setUserinfofix_form({
+                Userinfofix_email: data.user_email,
+                Userinfofix_password: "",
+                Userinfofix_name: data.user_name,
+                Userinfofix_tel: data.user_tel,
+            });
         }
     }
 
@@ -43,7 +48,7 @@ const Userinfofix = () => {
             navigate("/Login");
         } else {
             //DB에 저장된 회원정보 가져오기
-            Set_Userinfofix_form(Userinfofix_data);
+            Set_Userinfofix_form(user.name);
         }
     }, [navigate]);
 
@@ -61,19 +66,22 @@ const Userinfofix = () => {
         }));
 
         //DB 값 전달
-        const response = await fetch("http://localhost:8080/check_email", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json", //데이터 타입 : 데이터형식(json)
-            },
-            //객체형식 데이터 전달
-            body: JSON.stringify({ Userinfofix_email: email_value }),
-        });
+        const response = await fetch(
+            "http://localhost:8080/userinfo_check_email",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json", //데이터 타입 : 데이터형식(json)
+                },
+                //객체형식 데이터 전달
+                body: JSON.stringify({ Userinfofix_email: email_value }),
+            }
+        );
 
         //받은 값 활용
         //서버에서 받은 json데이터를 자바스크립트 객체로 변환하여 저장
         const data = await response.json();
-        if (data.email_exit === true) {
+        if (data.user_email_exit) {
             setUserinfofix_error((prev) => ({
                 ...prev,
                 Userinfofix_error_email: "이미 존재하는 이메일입니다.",
@@ -112,29 +120,36 @@ const Userinfofix = () => {
     function handleChange(e) {
         const { id, value } = e.target;
         setUserinfofix_form((prev) => ({ ...prev, [id]: value }));
+        console.log("데이터 저장");
     }
 
     const handleUserinfofix_Submit = async (e) => {
-        //에러에 문구가 있으닌 true
+        e.preventDefault();
         if (Userinfofix_error.Userinfofix_error_password) {
             alert("비밀번호가 일치하지 않습니다.");
-            e.preventDefault();
         } else if (Userinfofix_error.Userinfofix_error_email) {
             alert("중복된 이메일입니다.");
             //새로고침 방지용
-            e.preventDefault();
         } else {
+            const user = JSON.parse(localStorage.getItem("user"));
+            const user_name = user.name;
+            const user_info_data = { ...Userinfofix_form, user_name };
             //DB에 화원가입정보 보내기
-            const response = await fetch("http://localhost:8080/signup", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(Userinfofix_form),
-            });
-            //fetch의 반환값(response.ok / response.json()) = 상태값 200-299이면 true / false(웹 개발자모드에서 http상태코드 오류)
-            if (response.ok) {
-                //회원가입 성공
+            const response = await fetch(
+                "http://localhost:8080/update_signup",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(user_info_data),
+                }
+            );
+
+            const data = await response.json();
+            if (data.updata_signup_check) {
+                localStorage.removeItem("user");
+                navigate("/Login");
             }
         }
     };
@@ -212,7 +227,6 @@ const Userinfofix = () => {
                                                 handleBlurOrEnter();
                                         }}
                                         placeholder="비밀번호를 입력하세요"
-                                        required
                                     />
                                 </div>
                             </div>
@@ -228,7 +242,6 @@ const Userinfofix = () => {
                                         id="confirmPassword"
                                         value={confirmPassword}
                                         placeholder="비밀번호를 입력하세요"
-                                        required
                                         onChange={handleConfirmPasswordChange}
                                         onBlur={handleBlurOrEnter} //input바깥영역을 눌렀을 경우발생하는 이벤트 (반대; onFocus)
                                         onKeyDown={(e) => {
