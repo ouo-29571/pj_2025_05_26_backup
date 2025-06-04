@@ -59,33 +59,44 @@ const Userinfofix = () => {
     //이메일 중복확인
     const handleBlurOrEnter_email = async (e) => {
         const email_value = e.target.value;
+        const user = sessionStorage.getItem("user");
+        //문자열로 가져온 데이터를 객체로 변환
+        const user_email = JSON.parse(user);
+
         //form 이메일 값 전달
         setUserinfofix_form((prev) => ({
             ...prev,
             Userinfofix_email: email_value,
         }));
 
-        //DB 값 전달
-        const response = await fetch(
-            "http://localhost:8080/userinfo_check_email",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json", //데이터 타입 : 데이터형식(json)
-                },
-                //객체형식 데이터 전달
-                body: JSON.stringify({ Userinfofix_email: email_value }),
-            }
-        );
+        //현재 저장된 이메일과 신규 이메일이 같을 경우 비교 안함
+        if (Userinfofix_form.Userinfofix_email != user_email.name) {
+            console.log("이메일 확인중");
+            //DB 값 전달
+            const response = await fetch(
+                "http://localhost:8080/userinfo_check_email",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json", //데이터 타입 : 데이터형식(json)
+                    },
+                    //객체형식 데이터 전달
+                    body: JSON.stringify({ Userinfofix_email: email_value }),
+                }
+            );
 
-        //받은 값 활용
-        //서버에서 받은 json데이터를 자바스크립트 객체로 변환하여 저장
-        const data = await response.json();
-        if (data.user_email_exit) {
-            setUserinfofix_error((prev) => ({
-                ...prev,
-                Userinfofix_error_email: "이미 존재하는 이메일입니다.",
-            }));
+            const data = await response.json();
+            if (data.user_email_exit) {
+                setUserinfofix_error((prev) => ({
+                    ...prev,
+                    Userinfofix_error_email: "이미 존재하는 이메일입니다.",
+                }));
+            } else {
+                setUserinfofix_error((prev) => ({
+                    ...prev,
+                    Userinfofix_error_email: "",
+                }));
+            }
         } else {
             setUserinfofix_error((prev) => ({
                 ...prev,
@@ -123,8 +134,16 @@ const Userinfofix = () => {
         console.log("데이터 저장");
     }
 
+    //Enter key로 인한 회원정보 제출 방지
+    const handleKeyDown_userinfofix = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+        }
+    };
+
     const handleUserinfofix_Submit = async (e) => {
         e.preventDefault();
+
         if (Userinfofix_error.Userinfofix_error_password) {
             alert("비밀번호가 일치하지 않습니다.");
         } else if (Userinfofix_error.Userinfofix_error_email) {
@@ -172,6 +191,7 @@ const Userinfofix = () => {
                         <form
                             className="signupform"
                             onSubmit={handleUserinfofix_Submit}
+                            onKeyDown={handleKeyDown_userinfofix}
                         >
                             <div className="input-container">
                                 <div>

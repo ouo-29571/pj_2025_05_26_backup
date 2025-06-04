@@ -58,7 +58,7 @@ const Login = () => {
         <>
             <div className="login_page">
                 {/* 상단 헤더 */}
-                <div className="top_search"></div>
+                <div></div>
                 {/* 카테고리 */}
                 <div className="login">
                     <div className="login_logo">
