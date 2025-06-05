@@ -1,10 +1,10 @@
 /*사용자 이름*/
 .Mypage_page {
-    height: 100vh; /*세로 100%*/
     width: 100%; /*가로 100%*/
     display: flex;
     align-items: center; /*가로정렬*/
     flex-direction: column;
+    margin-bottom: 150px;
 }
 
 .userinfo_box {
