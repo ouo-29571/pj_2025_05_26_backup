@@ -105,16 +105,16 @@ app.post("/login_submit", async (req, res) => {
     res.json({ login_check });
 });
 
-//비밀번호 찾기 수정
+//비밀번호 찾기
 async function Passwordfind_data(Passwordfind_email) {
     const conn = await pool.getConnection();
-    const [rows] = await conn.query(
+    const rows = await conn.query(
         "SELECT COUNT(*) AS count FROM user WHERE email= ?",
         [Passwordfind_email]
     );
 
     conn.release();
-    return [rows];
+    return rows;
 }
 app.post("/Passwordfind", async (req, res) => {
     const { Passwordfind_email } = req.body;
@@ -126,6 +126,28 @@ app.post("/Passwordfind", async (req, res) => {
         Passwordfind_result = false;
     }
     res.json({ Passwordfind_result });
+});
+
+//비밀번호 수정
+async function Update_passwordfix(Passwordfix, user_email) {
+    const conn = await pool.getConnection();
+    const rows = await conn.query(
+        "UPDATE user SET password = ? WHERE email = ?",
+        [Passwordfix, user_email]
+    );
+    conn.release();
+    return rows;
+}
+app.post("/Passwordfix", async (req, res) => {
+    const { Passwordfix, user_email } = req.body;
+    const rows = await Update_passwordfix(Passwordfix, user_email);
+
+    if (rows.affectedRows > 0) {
+        Passwordfix_result = true;
+    } else {
+        Passwordfix_result = false;
+    }
+    res.json({ Passwordfix_result });
 });
 
 //마이페이지
@@ -184,7 +206,6 @@ app.post("/userinfo_check_email", async (req, res) => {
     const { Userinfofix_email } = req.body;
     const rows = await user_find_email(Userinfofix_email);
 
-    console.log(rows[0].count);
     user_email_exit = false;
     if (rows[0].count > 0) {
         user_email_exit = true;
@@ -203,7 +224,6 @@ async function Update_signup_data(
     user_name
 ) {
     const conn = await pool.getConnection();
-    console.log(user_name);
     let rows;
     if (Userinfofix_password !== "") {
         const result = await conn.query(
@@ -230,8 +250,6 @@ async function Update_signup_data(
 }
 
 app.post("/update_signup", async (req, res) => {
-    console.log(req.body);
-
     const {
         Userinfofix_email,
         Userinfofix_password,
@@ -248,7 +266,6 @@ app.post("/update_signup", async (req, res) => {
         user_name
     );
 
-    console.log(user_name);
     updata_signup_check = false;
     if (rows) {
         updata_signup_check = true;

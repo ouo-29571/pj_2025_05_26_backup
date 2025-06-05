@@ -163,8 +163,9 @@ const Signup = () => {
                                         onBlur={handleBlurOrEnter} //input바깥영역을 눌렀을 경우발생하는 이벤트 (반대; onFocus)
                                         onKeyDown={(e) => {
                                             //키보드 눌렀을 경우 발생
-                                            if (e.key === "Enter")
+                                            if (e.key === "Enter") {
                                                 handleBlurOrEnter();
+                                            }
                                         }}
                                         placeholder="비밀번호를 입력하세요"
                                         required

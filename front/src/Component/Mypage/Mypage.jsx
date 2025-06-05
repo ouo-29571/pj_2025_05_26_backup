@@ -7,7 +7,6 @@ const mypage = () => {
     const navigate = useNavigate();
 
     //사용자 정보
-    const [username, setUsername] = useState("user");
     const [coupon, setCoupon] = useState(0);
     const [bookmark, setBookmark] = useState(0);
 

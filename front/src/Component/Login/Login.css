@@ -3,7 +3,6 @@
     width: 100%;
     display: flex;
     justify-content: center; /*가로정렬*/
-    align-items: center; /*세로정렬*/
 }
 
 /*상단*/
@@ -19,7 +18,6 @@
 .login_logo > img {
     width: 200px;
     height: auto; /*비율맞추도록*/
-    margin-top: 30px;
     margin-left: 30%;
     margin-bottom: 100px;
 
