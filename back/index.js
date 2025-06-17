@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 const pool = mariadb.createPool({
-    host: "192.168.0.191", //127.0.01
+    host: "192.168.0.191", //127.0.0.1
     user: "4team", //root
     password: "4team", //root
     database: "4team", //test_del
